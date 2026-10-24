@@ -1,0 +1,27 @@
+
+name: Compilar APK com Buildozer
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch: # Permite rodar o botão manualmente se quiser
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar o código do repositório
+        uses: actions/checkout@v4
+
+      - name: Compilar APK usando Buildozer Action
+        uses: ArtemGovorov/buildozer-action@v1
+        with:
+          command: buildozer android debug
+          buildozer_version: stable
+
+      - name: Enviar o APK gerado para download
+        uses: actions/artifacts@v4
+        with:
+          name: aplicativo-kivy-apk
+          path: .buildozer/android/platform/build/dists/*/bin/*.apk
